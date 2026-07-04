@@ -51,6 +51,15 @@ On first use, choose `Grant Accessibility Permission` from the SnapKeys menu bar
 menu, or open System Settings > Privacy & Security > Accessibility and enable
 SnapKeys.
 
+## Download
+
+Prebuilt app zips are attached to GitHub Releases:
+
+https://github.com/akhilravidas/SnapKeys/releases
+
+Release builds are ad-hoc signed but not notarized. macOS may require opening
+the app from Finder with Control-click > Open the first time.
+
 ## Install from source
 
 ```sh

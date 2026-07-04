@@ -3,6 +3,11 @@
 Tiny keyboard-only macOS window mover. It is meant to cover the useful parts of
 Magnet without global mouse hooks, edge dragging, or polling.
 
+I built this because I was running into severe Magnet performance issues where
+macOS input events, including scrolling and typing, would stop registering
+reliably. I only needed keyboard-driven window splits, so SnapKeys intentionally
+keeps the scope much smaller.
+
 ## AI disclosure
 
 This project was written end to end by OpenAI Codex in response to a user request.
@@ -17,6 +22,9 @@ for anything sensitive.
 SnapKeys exists for people who only need keyboard-driven window positioning and
 want to avoid always-on window-manager behavior. It does not try to clone drag
 snapping, edge detection, window previews, Spaces behavior, or complex app rules.
+
+The original motivation was replacing my personal Magnet usage after repeated
+input-lag and high-CPU problems.
 
 SnapKeys is not affiliated with Magnet, CrowdCafé, or BOOTCODE A.S.
 

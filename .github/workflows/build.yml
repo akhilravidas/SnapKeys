@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  macos:
+    name: macOS app
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: make clean all
+
+      - name: Package app
+        run: |
+          mkdir -p dist
+          ditto -c -k --keepParent .build/SnapKeys.app dist/SnapKeys-macos.zip
+          shasum -a 256 dist/SnapKeys-macos.zip > dist/SnapKeys-macos.zip.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SnapKeys-macos
+          path: |
+            dist/SnapKeys-macos.zip
+            dist/SnapKeys-macos.zip.sha256

@@ -6,8 +6,10 @@ MACOS_DIR := $(CONTENTS_DIR)/MacOS
 RESOURCES_DIR := $(CONTENTS_DIR)/Resources
 ICONSET_DIR := $(BUILD_DIR)/AppIcon.iconset
 ICON_FILE := $(BUILD_DIR)/AppIcon.icns
+INSTALL_DIR := $(HOME)/Applications
+INSTALLED_APP := $(INSTALL_DIR)/$(APP_NAME).app
 
-.PHONY: all clean run
+.PHONY: all clean install run run-installed
 
 all: $(APP_DIR)
 
@@ -40,6 +42,15 @@ $(ICON_FILE): Tools/generate_icon.swift
 
 run: $(APP_DIR)
 	open "$(APP_DIR)"
+
+install: $(APP_DIR)
+	mkdir -p "$(INSTALL_DIR)"
+	rm -rf "$(INSTALLED_APP)"
+	ditto "$(APP_DIR)" "$(INSTALLED_APP)"
+	codesign --force --deep --sign - "$(INSTALLED_APP)"
+
+run-installed: install
+	open "$(INSTALLED_APP)"
 
 clean:
 	rm -rf "$(BUILD_DIR)"

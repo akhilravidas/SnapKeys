@@ -81,9 +81,11 @@ private struct HotKey {
 
 private final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
+    private var permissionStatusItem: NSMenuItem!
     private var hotKeyRefs: [EventHotKeyRef?] = []
     private var hotKeyActions: [UInt32: WindowAction] = [:]
     private var lastNonSelfApplication: NSRunningApplication?
+    private var didPromptForAccessibility = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -113,6 +115,10 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
         addActionItems(to: menu, [.maximize, .center])
         menu.addItem(.separator())
 
+        permissionStatusItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        permissionStatusItem.isEnabled = false
+        menu.addItem(permissionStatusItem)
+
         let permissionsItem = NSMenuItem(title: "Grant Accessibility Permission", action: #selector(promptForAccessibility), keyEquivalent: "")
         permissionsItem.target = self
         menu.addItem(permissionsItem)
@@ -126,7 +132,9 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
         quitItem.target = self
         menu.addItem(quitItem)
 
+        menu.delegate = self
         statusItem.menu = menu
+        updatePermissionStatus()
     }
 
     private func addActionItems(to menu: NSMenu, _ actions: [WindowAction]) {
@@ -200,7 +208,11 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func perform(_ action: WindowAction) {
-        guard accessibilityTrusted(prompt: true) else { return }
+        guard accessibilityTrusted(prompt: false) else {
+            promptForAccessibilityOnce()
+            NSSound.beep()
+            return
+        }
         guard let window = focusedWindow() else {
             NSSound.beep()
             return
@@ -395,8 +407,25 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func promptForAccessibility() {
+        didPromptForAccessibility = true
         if !accessibilityTrusted(prompt: true) {
             openAccessibilitySettings()
+        }
+    }
+
+    private func promptForAccessibilityOnce() {
+        guard !didPromptForAccessibility else { return }
+        promptForAccessibility()
+    }
+
+    private func updatePermissionStatus() {
+        guard let permissionStatusItem else { return }
+        if accessibilityTrusted(prompt: false) {
+            permissionStatusItem.title = "Accessibility: Granted"
+            statusItem.button?.title = "⌘"
+        } else {
+            permissionStatusItem.title = "Accessibility: Missing"
+            statusItem.button?.title = "!"
         }
     }
 
@@ -407,6 +436,12 @@ private final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func quit() {
         NSApplication.shared.terminate(nil)
+    }
+}
+
+extension AppDelegate: NSMenuDelegate {
+    func menuWillOpen(_ menu: NSMenu) {
+        updatePermissionStatus()
     }
 }
 

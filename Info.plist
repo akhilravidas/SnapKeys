@@ -10,10 +10,12 @@
   <key>CFBundleIconFile</key>
   <string>AppIcon</string>
   <key>CFBundleIdentifier</key>
-  <string>local.snapkeys</string>
+  <string>com.akhilravidas.SnapKeys</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
+  <string>SnapKeys</string>
+  <key>CFBundleDisplayName</key>
   <string>SnapKeys</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>

@@ -55,9 +55,18 @@ Run it with:
 make run
 ```
 
+For day-to-day use, install it to a stable path first:
+
+```sh
+make run-installed
+```
+
+That installs and launches `~/Applications/SnapKeys.app`.
+
 On first use, choose `Grant Accessibility Permission` from the SnapKeys menu bar
 menu, or open System Settings > Privacy & Security > Accessibility and enable
-SnapKeys.
+SnapKeys. If you previously granted permission to a copy under `.build`, remove
+that old entry and grant permission to `~/Applications/SnapKeys.app`.
 
 ## Download
 
@@ -77,7 +86,7 @@ make run
 ```
 
 For a normal install, copy `.build/SnapKeys.app` to `/Applications` after
-building it.
+building it, or run `make install` to install to `~/Applications/SnapKeys.app`.
 
 ## Shortcuts
 
@@ -107,6 +116,8 @@ building it.
 SnapKeys only wakes up when a registered hotkey or menu item is used. It does
 not install a mouse event tap, does not watch dragging, and does not continuously
 poll Accessibility or WindowServer.
+
+The default shortcuts use Control-Option, not Command-Control.
 
 ## License
 
